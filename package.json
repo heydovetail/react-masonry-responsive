@@ -6,11 +6,10 @@
   "module": "./lib.es2015/index.js",
   "name": "react-masonry-responsive",
   "version": "1.0.1",
-  "unpkg": "./lib.umd/index.js",
   "types": "./lib.es2015/index.d.ts",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "tsc -p tsconfig.lib.es2015.json && tsc -p tsconfig.lib.commonjs.json && tsc -p tsconfig.lib.umd.json",
+    "build": "tsc -p tsconfig.lib.es2015.json && tsc -p tsconfig.lib.commonjs.json",
     "prepublishOnly": "npm run build",
     "storybook": "ts-node ./node_modules/.bin/start-storybook -p 9003 -c .storybook",
     "test": "npm run test:lint && npm run test:jest",

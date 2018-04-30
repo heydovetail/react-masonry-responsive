@@ -1,7 +1,6 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import Masonry from "../";
-import { MasonryItem } from "../";
+import { Masonry, MasonryItem } from "../";
 
 storiesOf("Masonry", module).add("default", () => {
   class Example extends React.PureComponent {

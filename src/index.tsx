@@ -28,7 +28,7 @@ export interface State {
   containerWidth?: number;
 }
 
-export default class Masonry extends React.PureComponent<Props, State> {
+export class Masonry extends React.PureComponent<Props, State> {
   public readonly state: State = {
     containerWidth: this.props.containerWidth
   };

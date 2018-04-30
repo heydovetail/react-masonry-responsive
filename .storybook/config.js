@@ -1,30 +1,20 @@
 import { configure } from "@storybook/react";
-import { cssRaw } from "typestyle";
+import { cssRule } from "typestyle";
 
-cssRaw(`
-* {
-  box-sizing: border-box;
-}
+cssRule("*", {
+  boxSizing: "border-box",
+  "-webkit-tap-highlight-color": ["rgba(0,0,0,0)", "transparent"]
+});
 
-html {
-  position: relative;
-}
+cssRule("html", {
+  position: "relative"
+});
 
-body {
-  background: #ffffff;
-  color: #140b2f;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 28px;
-  padding-bottom: 64px;
-  -webkit-font-smoothing: antialiased;
-}
-
-a {
-  text-decoration: none;
-}
-`);
+cssRule("body", {
+  fontFamily: "sans-serif",
+  margin: "48px",
+  padding: 0
+});
 
 const req = require.context("../src", true, /.*\.stories.tsx$/);
 

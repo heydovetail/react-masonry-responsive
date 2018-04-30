@@ -11,7 +11,7 @@ storiesOf("Masonry", module).add("default", () => {
       for (step = 0; step < 50; step++) {
         items.push({
           id: `${step}`,
-          node: <Box height={Math.random() * (500 - 100) + 100} />
+          node: <Box id={step} height={Math.random() * (500 - 100) + 100} />
         });
       }
 
@@ -22,15 +22,19 @@ storiesOf("Masonry", module).add("default", () => {
   return <Example />;
 });
 
-function Box(props: { height: number }) {
+function Box(props: { id: number; height: number }) {
   return (
     <div
       style={{
-        backgroundColor: "#512DA8",
+        backgroundColor: "#512da8",
+        color: "#fff",
         borderRadius: "3px",
         height: props.height,
+        padding: "24px",
         width: "100%"
       }}
-    />
+    >
+      {props.id}
+    </div>
   );
 }

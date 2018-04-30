@@ -1,0 +1,18 @@
+# source
+/src
+
+# tests
+__spec__
+
+# build tools
+/.circleci
+/*.tgz
+
+# editor settings
+.editorconfig
+.vscode
+tsconfig.*
+tslint.json
+
+# npm
+npm-debug.log*

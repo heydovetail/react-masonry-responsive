@@ -1,0 +1,75 @@
+{
+  "author": "Benjamin Humphrey <benjamin@dovetailapp.com>",
+  "description":
+    "A lightweight, responsive masonry layout for React, with a simple interface and server-side rendering support.",
+  "homepage": "https://github.com/heydovetail/react-masonry-responsive",
+  "main": "./lib.commonjs/index.js",
+  "module": "./lib.es2015/index.js",
+  "name": "react-masonry-responsive",
+  "version": "1.0.0",
+  "unpkg": "./lib.umd/index.js",
+  "types": "./lib.es2015/index.d.ts",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build":
+      "tsc -p tsconfig.lib.es2015.json && tsc -p tsconfig.lib.commonjs.json && tsc -p tsconfig.lib.umd.json",
+    "prepublishOnly": "npm run build",
+    "storybook":
+      "ts-node ./node_modules/.bin/start-storybook -p 9003 -c .storybook",
+    "test": "npm run test:lint && npm run test:jest",
+    "test:jest": "./node_modules/.bin/jest --runInBand",
+    "test:lint": "tslint -p tsconfig.json",
+    "test:lint:fix": "npm run test:lint -- --fix",
+    "precommit": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heydovetail/react-masonry-responsive.git"
+  },
+  "dependencies": {
+    "@heydovetail/tslint-config": "^1.0.0",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-resize-detector": "^2.1.0",
+    "react": "^16.2.0",
+    "tslib": "^1.8.1"
+  },
+  "devDependencies": {
+    "@heydovetail/editorconfig": "^2.0.0",
+    "@storybook/addon-storyshots": "^3.3.3",
+    "@storybook/react": "^3.3.3",
+    "@types/jest": "^22.0.0",
+    "@types/jsdom": "^11.0.2",
+    "@types/storybook__react": "^3.0.5",
+    "awesome-typescript-loader": "^3.2.3",
+    "jest": "^22.0.3",
+    "jest-cli": "^22.0.3",
+    "lint-staged": "^7.0.1",
+    "prettier": "^1.9.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-resize-detector": "^1.1.0",
+    "react-test-renderer": "^16.2.0",
+    "ts-jest": "^22.0.0",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1",
+    "typestyle": "^1.5.1",
+    "webpack": "^3.10.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json"
+      },
+      "NODE_ENV": "test"
+    },
+    "moduleFileExtensions": ["js", "ts", "tsx", "json"],
+    "testRegex": "src/.*(/__specs__/.*|\\.spec)\\.ts$",
+    "transform": {
+      "\\.tsx?$": "ts-jest"
+    }
+  },
+  "lint-staged": {
+    "*.ts": ["prettier --write", "test:lint:fix", "git add"]
+  }
+}

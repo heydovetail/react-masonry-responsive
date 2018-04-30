@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.lib",
+  "compilerOptions": {
+    "module": "es2015",
+    "outDir": "./lib.es2015"
+  }
+}

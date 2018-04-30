@@ -17,7 +17,6 @@ aliases:
       command: |
         npm install
         git checkout HEAD -- package-lock.json
-
   cache_node_modules: &cache_node_modules
     save_cache:
       name: Save node modules cache
@@ -33,10 +32,12 @@ aliases:
         (umask 077; echo -n $RELEASE_BOT_SSH_BASE64_PRIVATE_KEY | base64 --decode > ~/.ssh/id_rsa_release_bot)
         ssh-add ~/.ssh/id_rsa_release_bot
         git push . $(git rev-parse --abbrev-ref HEAD):master
+        git push . master:release/major
+        git push . master:release/minor
+        git push . master:release/patch
         git push --all origin
         (umask 077; echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc)
         npm publish --access public
-
   git_config: &git_config
     run:
       name: git config
@@ -44,7 +45,6 @@ aliases:
         git config --global user.email "releasebot@dovetailapp.com"
         git config --global user.name "Release Bot"
         git config --global push.followTags true
-
 version: 2
 jobs:
   test:
@@ -122,4 +122,3 @@ workflows:
             branches:
               only:
                 - release/patch
-

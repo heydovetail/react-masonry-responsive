@@ -1,12 +1,11 @@
 {
   "author": "Benjamin Humphrey <benjamin@dovetailapp.com>",
-  "description":
-    "A lightweight, responsive masonry layout for React, with a simple interface and server-side rendering support.",
+  "description": "A lightweight, responsive masonry layout for React, with a simple interface and server-side rendering support.",
   "homepage": "https://github.com/heydovetail/react-masonry-responsive",
   "main": "./lib.commonjs/index.js",
   "module": "./lib.es2015/index.js",
   "name": "react-masonry-responsive",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "types": "./lib.es2015/index.d.ts",
   "license": "Apache-2.0",
   "scripts": {
@@ -65,13 +64,22 @@
       },
       "NODE_ENV": "test"
     },
-    "moduleFileExtensions": ["js", "ts", "tsx", "json"],
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "tsx",
+      "json"
+    ],
     "testRegex": "src/.*(/__specs__/.*|\\.spec)\\.ts$",
     "transform": {
       "\\.tsx?$": "ts-jest"
     }
   },
   "lint-staged": {
-    "*.ts": ["prettier --write", "test:lint:fix", "git add"]
+    "*.ts": [
+      "prettier --write",
+      "test:lint:fix",
+      "git add"
+    ]
   }
 }

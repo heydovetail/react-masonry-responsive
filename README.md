@@ -58,11 +58,21 @@ function AdvancedExample(props: (items: MasonryItem)) {
 
 ## Props
 
+Items can either be an array of React.ReactNodes, and the library will set the key on each, or, you can pass in an array of objects with keys.
+
 ```jsx
+export interface MasonryKeyedItem {
+  key: string | number;
+  node: React.ReactNode;
+}
+
+// Array of ReactNodes or objects with nodes and keys.
+export type MasonryItem = MasonryKeyedItem | React.ReactNode;
+
 export interface Props {
   // Optional. Used for server-side rendering when there’s
   // no access to the DOM to determine the container width with JS.
-  // Pass this through to minimize the ‘snap’ when JS loads / rehydrates.
+  // Pass this through for server-side rendering support.
   containerWidth?: number;
 
   // Optional gap between items, both horizontally and vertically.
@@ -70,8 +80,8 @@ export interface Props {
   gap?: number;
 
   // An array of items to render in the masonry layout. Each item
-  // should contain a unique ID (preferably something like UUID)
-  // and a component (node) to render.
+  // should either be a React.ReactNode component to render, or an object
+  // with the component and an optional unique key.
   items: MasonryItem[];
 
   // The desired width for each column in the masonry layout. When columns

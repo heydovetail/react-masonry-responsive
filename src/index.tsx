@@ -8,6 +8,7 @@ export interface MasonryKeyedItem {
   node: React.ReactNode;
 }
 
+// Array of ReactNodes or objects with nodes and keys.
 export type MasonryItem = MasonryKeyedItem | React.ReactNode;
 
 export interface Props {

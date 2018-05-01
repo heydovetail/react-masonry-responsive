@@ -1,5 +1,5 @@
 import { configure } from "@storybook/react";
-import { cssRule } from "typestyle";
+import { cssRule, forceRenderStyles } from "typestyle";
 
 cssRule("*", {
   boxSizing: "border-box",
@@ -15,6 +15,8 @@ cssRule("body", {
   margin: "48px",
   padding: 0
 });
+
+forceRenderStyles();
 
 const req = require.context("../src", true, /.*\.stories.tsx$/);
 

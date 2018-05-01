@@ -1,7 +1,7 @@
 aliases:
   docker: &docker
     docker:
-      - image: node-9.4-yarn-1.5.1-npm-5.6.0-awscli-1.15.3
+      - image: heydovetail/node:node-9.4-yarn-1.5.1-npm-5.6.0-awscli-1.15.3
         environment:
           NODE_ENV: test
 

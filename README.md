@@ -6,11 +6,12 @@ A lightweight, performant, and responsive masonry layout for React.
 
 ## Features
 
-* Easy-to-use interface – just pass items to render and desired column width
-* Responsive item widths and column count based on container size
-* Uses `position: absolute` for simplicity and performance
-* Flexbox fallback for server-side rendering
+* Easy-to-use interface – just pass items to render along with desired column width
+* Uses basic CSS absolute positioning for compatibility, simplicity, and performance
+* Fully responsive column width and count based on container size
 * Full-bleed columns – no extra gutter on the left and right
+* Flexbox fallback with flex-wrap for server-side rendering
+* Small library with few dependencies
 * No cheesy baked-in animations
 
 ## Installation

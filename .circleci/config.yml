@@ -1,7 +1,7 @@
 aliases:
   docker: &docker
     docker:
-      - image: dovetailapp/notes-ci:node-8.4.0-npm-5.4.2
+      - image: node-9.4-yarn-1.5.1-npm-5.6.0-awscli-1.15.3
         environment:
           NODE_ENV: test
 
@@ -9,18 +9,18 @@ aliases:
     restore_cache:
       name: Restore node_modules cache
       keys:
-        - node-modules-{{ checksum "package-lock.json" }}
+        - node-modules-{{ checksum "yarn.lock" }}
 
   install_node_modules: &install_node_modules
     run:
       name: Install node modules
       command: |
-        npm install
-        git checkout HEAD -- package-lock.json
+        yarn install
+
   cache_node_modules: &cache_node_modules
     save_cache:
       name: Save node modules cache
-      key: node-modules-{{ checksum "package-lock.json" }}
+      key: node-modules-{{ checksum "yarn.lock" }}
       paths:
         - node_modules
 
@@ -54,7 +54,7 @@ jobs:
       - <<: *restore_node_modules
       - <<: *install_node_modules
       - <<: *cache_node_modules
-      - run: npm test
+      - run: yarn test
 
   release_major:
     <<: *docker

@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.cli",
-  "compilerOptions": {
-    "module": "commonjs",
-    "outDir": "./cli.commonjs"
-  }
-}

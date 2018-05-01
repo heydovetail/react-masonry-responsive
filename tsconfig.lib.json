@@ -3,8 +3,5 @@
   "exclude": [
     "./src/**/__specs__/*",
     "./src/**/__stories__/*"
-  ],
-  "include": [
-    "./src/lib"
   ]
 }

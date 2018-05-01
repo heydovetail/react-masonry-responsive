@@ -17,7 +17,7 @@ storiesOf("Masonry", module)
     );
   })
   .add("lots of items", () => {
-    return <Masonry minColumnWidth={128} items={generateItems(500)} />;
+    return <Masonry minColumnWidth={128} items={generateItems(1000)} />;
   });
 
 function generateItems(count: number) {

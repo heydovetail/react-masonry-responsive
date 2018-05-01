@@ -13,13 +13,13 @@ aliases:
 
   install_node_modules: &install_node_modules
     run:
-      name: Install node modules
+      name: Install node_modules
       command: |
         yarn install
 
   cache_node_modules: &cache_node_modules
     save_cache:
-      name: Save node modules cache
+      name: Save node_modules cache
       key: node-modules-{{ checksum "yarn.lock" }}
       paths:
         - node_modules

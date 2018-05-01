@@ -3,3 +3,4 @@
 /cli.*
 *.d.ts
 /*.tgz
+/yarn-error.log

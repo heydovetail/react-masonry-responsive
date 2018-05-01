@@ -1,26 +1,28 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
 
-const DEFAULT_GUTTER = 32;
+const DEFAULT_GAP = 32;
 
-export interface MasonryItem {
-  id: string | number;
+export interface MasonryKeyedItem {
+  key: string | number;
   node: React.ReactNode;
 }
+
+export type MasonryItem = MasonryKeyedItem | React.ReactNode;
 
 export interface Props {
   // Optional. Used for server-side rendering when there’s
   // no access to the DOM to determine the container width with JS.
-  // Pass this through to minimize the ‘snap’ when JS loads / rehydrates.
+  // Pass this through for server-side rendering support.
   containerWidth?: number;
 
   // Optional gap between items, both horizontally and vertically.
   // Defaults to 32px.
-  gutter?: number;
+  gap?: number;
 
   // An array of items to render in the masonry layout. Each item
-  // should contain a unique ID (preferably something like UUID)
-  // and a component (node) to render.
+  // should either be a React.ReactNode component to render, or an object
+  // with the component and an optional unique key.
   items: MasonryItem[];
 
   // The desired width for each column in the masonry layout. When columns
@@ -48,8 +50,8 @@ export class Masonry extends React.PureComponent<Props, State> {
   }
 
   public render() {
-    const { gutter = DEFAULT_GUTTER, items } = this.props;
-    const margin = gutter / 2;
+    const { gap = DEFAULT_GAP, items } = this.props;
+    const margin = gap / 2;
     const layout = this.determineLayout();
 
     return (
@@ -65,19 +67,22 @@ export class Masonry extends React.PureComponent<Props, State> {
         }}
       >
         {layout !== null
-          ? items.map(item => (
-              <div
-                data-masonary-item
-                key={item.id}
-                style={{
-                  flex: "1 1 auto",
-                  margin: margin,
-                  width: layout.width
-                }}
-              >
-                {item.node}
-              </div>
-            ))
+          ? items.map(
+              (item, i) =>
+                item != null ? (
+                  <div
+                    data-masonary-item
+                    key={isKeyedItem(item) ? item.key : i}
+                    style={{
+                      flex: "1 1 auto",
+                      margin: margin,
+                      width: layout.width
+                    }}
+                  >
+                    {isKeyedItem(item) ? item.node : item}
+                  </div>
+                ) : null
+            )
           : null}
         {process.env.NODE_ENV === "test" ? null : (
           <ReactResizeDetector
@@ -93,25 +98,25 @@ export class Masonry extends React.PureComponent<Props, State> {
 
   private readonly determineLayout = () => {
     const { containerWidth } = this.state;
-    const { gutter = DEFAULT_GUTTER, minColumnWidth } = this.props;
+    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
 
     if (containerWidth === undefined) {
       return null;
     }
 
     // Determine the number of columns we can fit in the container.
-    let count = Math.floor((containerWidth + gutter) / (minColumnWidth + gutter));
+    let count = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
 
     // Prevent count from becoming negative when there’s space for one or less columns.
     count = Math.max(count, 1);
 
     // Determine the width of each column.
-    let width = (containerWidth - gutter * (count - 1)) / count;
+    let width = (containerWidth - gap * (count - 1)) / count;
 
     // Allow items to shrink smaller than the minColumnWidth if necessary.
     width = width > containerWidth ? containerWidth : width;
 
-    return { count, gutter, width };
+    return { count, gap, width };
   };
 
   private readonly applyMasonryLayout = () => {
@@ -121,7 +126,7 @@ export class Masonry extends React.PureComponent<Props, State> {
       return;
     }
 
-    const { count, gutter, width } = layout;
+    const { count, gap, width } = layout;
     const columnHeights = zeroes(count);
     const children = Array.prototype.slice.call(this.container.children);
 
@@ -132,7 +137,7 @@ export class Masonry extends React.PureComponent<Props, State> {
 
         // Set absolute positioning styles
         element.style.top = `${columnHeights[column]}px`;
-        element.style.left = `${column * (width + gutter)}px`;
+        element.style.left = `${column * (width + gap)}px`;
         element.style.position = "absolute";
 
         // Remove fallback styles for server-side rendering
@@ -140,16 +145,20 @@ export class Masonry extends React.PureComponent<Props, State> {
         element.style.margin = null;
 
         // Increment the height of the column
-        columnHeights[column] += element.clientHeight + gutter;
+        columnHeights[column] += element.clientHeight + gap;
       }
     });
 
     // Grow the the container to accommodate the highest column
-    this.container.style.height = `${Math.max(...columnHeights) - gutter}px`;
+    this.container.style.height = `${Math.max(...columnHeights) - gap}px`;
 
     // Remove the fallback server-side rendering style on the container
     this.container.style.margin = null;
   };
+}
+
+function isKeyedItem(item: MasonryItem): item is MasonryKeyedItem {
+  return item !== null && typeof item === "object" && "node" in item;
 }
 
 function zeroes(n: number) {

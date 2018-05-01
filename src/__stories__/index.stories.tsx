@@ -7,7 +7,7 @@ storiesOf("Masonry", module)
     return <Masonry minColumnWidth={128} items={generateItems(50)} />;
   })
   .add("custom gutter", () => {
-    return <Masonry gutter={96} minColumnWidth={200} items={generateItems(50)} />;
+    return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
   })
   .add("with containerWidth", () => {
     return (
@@ -22,12 +22,9 @@ storiesOf("Masonry", module)
 
 function generateItems(count: number) {
   const items: MasonryItem[] = [];
-  let step: number;
-  for (step = 1; step < count + 1; step++) {
-    items.push({
-      id: step,
-      node: <Box id={step} height={Math.random() * (500 - 100) + 100} />
-    });
+
+  for (let step = 1; step < count + 1; step++) {
+    items.push(<Box id={step} height={Math.random() * (500 - 100) + 100} />);
   }
 
   return items;

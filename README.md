@@ -2,12 +2,15 @@
 
 A lightweight, performant, and responsive masonry layout for React.
 
+![Screenshot of react-masonry-responsive](./img/screenshot.png?raw=true)
+
 ## Features
 
-* Easy-to-use interface (just pass items to render and desired column width)
+* Easy-to-use interface – just pass items to render and desired column width
 * Responsive item widths and column count based on container size
 * Uses `position: absolute` for simplicity and performance
-* Fallback for server-side rendering
+* Flexbox fallback for server-side rendering
+* Full-bleed columns – no extra gutter on the left and right
 * No cheesy baked-in animations
 
 ## Installation
@@ -39,12 +42,12 @@ function SimpleExample(props: (items: MasonryItem)) {
   );
 }
 
-function MaxContainerWidthExample(props: (items: MasonryItem)) {
+function AdvancedExample(props: (items: MasonryItem)) {
   return (
     <div style={{maxWidth: 800}}>
       <Masonry
         containerWidth={800}
-        gutter={16}
+        gap={16}
         items={props.items}
         minColumnWidth={128}
       />
@@ -64,7 +67,7 @@ export interface Props {
 
   // Optional gap between items, both horizontally and vertically.
   // Defaults to 32px.
-  gutter?: number;
+  gap?: number;
 
   // An array of items to render in the masonry layout. Each item
   // should contain a unique ID (preferably something like UUID)

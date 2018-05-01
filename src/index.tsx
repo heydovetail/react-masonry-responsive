@@ -129,9 +129,16 @@ export class Masonry extends React.PureComponent<Props, State> {
 
     const { count, gap, width } = layout;
     const columnHeights = zeroes(count);
+    const elementHeights: number[] = [];
     const children = Array.prototype.slice.call(this.container.children);
 
     children.forEach((element: HTMLElement) => {
+      if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
+        elementHeights.push(element.clientHeight);
+      }
+    });
+
+    children.forEach((element: HTMLElement, i: number) => {
       if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
         // Index of the column that the item should be placed in.
         const column = columnHeights.indexOf(Math.min(...columnHeights));
@@ -146,7 +153,7 @@ export class Masonry extends React.PureComponent<Props, State> {
         element.style.margin = null;
 
         // Increment the height of the column
-        columnHeights[column] += element.clientHeight + gap;
+        columnHeights[column] += elementHeights[i] + gap;
       }
     });
 

@@ -2,7 +2,7 @@
 
 A lightweight, performant, and responsive masonry layout for React.
 
-![Screenshot of react-masonry-responsive](img/screenshot.png?raw=true)
+![Screenshot of react-masonry-responsive](https://raw.githubusercontent.com/heydovetail/react-masonry-responsive/master/img/screenshot.png)
 
 ## Features
 

@@ -132,12 +132,14 @@ export class Masonry extends React.PureComponent<Props, State> {
     const elementHeights: number[] = [];
     const children = Array.prototype.slice.call(this.container.children);
 
+    // Measure the size of all children elements without causing reflows.
     children.forEach((element: HTMLElement) => {
       if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
         elementHeights.push(element.clientHeight);
       }
     });
 
+    // Iterate through the children elements and apply the positioning styles.
     children.forEach((element: HTMLElement, i: number) => {
       if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
         // Index of the column that the item should be placed in.

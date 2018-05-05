@@ -8,9 +8,6 @@
   "version": "1.0.4",
   "types": "./lib.es2015/index.d.ts",
   "license": "Apache-2.0",
-  "engines": {
-    "node": "9.4.0"
-  },
   "scripts": {
     "build": "tsc -p tsconfig.lib.es2015.json && tsc -p tsconfig.lib.commonjs.json",
     "prepublishOnly": "npm run build",

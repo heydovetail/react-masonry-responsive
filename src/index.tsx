@@ -120,7 +120,7 @@ export class Masonry extends React.PureComponent<Props, State> {
     return { count, gap, width };
   };
 
-  private readonly applyMasonryLayout = () => {
+  private readonly applyMasonryLayout = microTaskDebounce(() => {
     const layout = this.determineLayout();
 
     if (this.container === null || layout === null) {
@@ -164,7 +164,7 @@ export class Masonry extends React.PureComponent<Props, State> {
 
     // Remove the fallback server-side rendering style on the container
     this.container.style.margin = null;
-  };
+  });
 }
 
 function isKeyedItem(item: MasonryItem): item is MasonryKeyedItem {
@@ -173,4 +173,22 @@ function isKeyedItem(item: MasonryItem): item is MasonryKeyedItem {
 
 function zeroes(n: number) {
   return Array(...Array(n)).map(() => 0);
+}
+
+/**
+ * Debounce a function using a microtask.
+ * Necessary to allow typestyle-react to flush styles introduced during
+ * component render method.
+ */
+function microTaskDebounce(fn: () => void): () => void {
+  let scheduled = false;
+  return async () => {
+    if (!scheduled) {
+      scheduled = true;
+      // Promise is scheduled as a microtask.
+      await Promise.resolve();
+      scheduled = false;
+      fn();
+    }
+  };
 }

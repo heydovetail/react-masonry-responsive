@@ -64,7 +64,8 @@ export class Masonry extends React.PureComponent<Props, State> {
           display: "flex",
           flexWrap: "wrap",
           margin: -margin,
-          minHeight: 1
+          minHeight: 1,
+          position: "relative"
         }}
       >
         {layout !== null

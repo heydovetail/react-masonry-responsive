@@ -106,17 +106,26 @@ export class Masonry extends React.PureComponent<Props, State> {
       return null;
     }
 
+    let adjustedContainerWidth = containerWidth;
+
+    // The container will be larger initially due to the negative margin added to get the
+    // items to line up correctly for server-side rendering. We need to account for the extra margin
+    // in order to avoid a ‘snap’ that occurs when applyMasonryLayout() is run later.
+    if (this.props.containerWidth !== undefined && containerWidth > this.props.containerWidth) {
+      adjustedContainerWidth = containerWidth - gap;
+    }
+
     // Determine the number of columns we can fit in the container.
-    let count = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
+    let count = Math.floor((adjustedContainerWidth + gap) / (minColumnWidth + gap));
 
     // Prevent count from becoming negative when there’s space for one or less columns.
     count = Math.max(count, 1);
 
     // Determine the width of each column.
-    let width = (containerWidth - gap * (count - 1)) / count;
+    let width = (adjustedContainerWidth - gap * (count - 1)) / count;
 
     // Allow items to shrink smaller than the minColumnWidth if necessary.
-    width = width > containerWidth ? containerWidth : width;
+    width = width > adjustedContainerWidth ? adjustedContainerWidth : width;
 
     return { count, gap, width };
   };

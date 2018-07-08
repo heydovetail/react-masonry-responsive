@@ -1,4 +1,7 @@
 import * as React from "react";
+import ReactResizeDetector from "react-resize-detector";
+
+const DEFAULT_GAP = 32;
 
 export interface MasonryItem {
   key: string | number;
@@ -26,39 +29,41 @@ export interface Props {
 }
 
 export interface State {
-  columns: number;
+  columns: number | null;
 }
 
 export class Masonry extends React.PureComponent<Props, State> {
-  public readonly state: State = {
-    columns: 4
+  public state: State = {
+    columns: null
   };
 
   public render() {
-    const { gap = 32 } = this.props;
+    const { gap = DEFAULT_GAP } = this.props;
     const reorderedItems = this.reorder();
 
     return (
       <div
         style={{
           columns: `auto ${this.state.columns}`,
-          columnFill: "balance-all",
           columnGap: 0,
           margin: -gap
         }}
       >
-        {reorderedItems.map(item => (
-          <div
-            key={item.key}
-            style={{
-              breakAfter: item.isLast ? "column" : "avoid-column",
-              breakInside: "avoid",
-              padding: gap / 2
-            }}
-          >
-            {item.node}
-          </div>
-        ))}
+        {reorderedItems
+          ? reorderedItems.map(item => (
+              <div
+                key={item.key}
+                style={{
+                  breakAfter: item.isLast ? "column" : "avoid-column",
+                  breakInside: "avoid",
+                  padding: gap / 2
+                }}
+              >
+                {item.node}
+              </div>
+            ))
+          : null}
+        {process.env.NODE_ENV === "test" ? null : <ReactResizeDetector handleWidth onResize={this.resize} />}
       </div>
     );
   }
@@ -66,6 +71,10 @@ export class Masonry extends React.PureComponent<Props, State> {
   private reorder = () => {
     const { items } = this.props;
     const { columns } = this.state;
+
+    if (columns === null) {
+      return null;
+    }
 
     const reorderedItems: RenderedItem[] = [];
     let col = 0;
@@ -87,6 +96,13 @@ export class Masonry extends React.PureComponent<Props, State> {
     }
 
     return reorderedItems;
+  };
+
+  private readonly resize = (containerWidth: number) => {
+    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
+    let columns = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
+    columns = Math.max(columns, 1);
+    this.setState({ columns });
   };
 }
 

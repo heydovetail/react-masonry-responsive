@@ -91,7 +91,7 @@ export interface Props {
 
 This library uses [CSS columns](https://developer.mozilla.org/en-US/docs/Web/CSS/columns) rather than transforms, absolute positioning, flexbox, or grid. CSS columns are the simplest way to create a responsive masonry layout, however, by default, columns display content from top-to-bottom, rather than left-to-right, as shown in [this demo](https://masonry-css-js.netlify.com/). This is because columns are primarily designed for text layout, to emulate a newspaper or magazine.
 
-This library has an algorithm that reorders items based on the number of columns (determined by the container width), and then uses the CSS properties [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) and [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) to further control which columns items should appear in to preserve the left-to-right ordering.
+This library has an algorithm that reorders items based on the number of columns (determined by the container width), and then uses the CSS properties [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) and [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) to further control which columns items should appear in to preserve the left-to-right ordering. Thanks to Jesse Korzan for [the original inspiration](https://hackernoon.com/masonry-layout-technique-react-demo-of-100-css-control-of-the-view-e4190fa4296) for the technique!
 
 ## Known issues
 

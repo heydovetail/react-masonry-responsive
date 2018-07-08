@@ -51,7 +51,7 @@ export class Masonry extends React.PureComponent<Props, State> {
           style={{
             columns: `auto ${columns}`,
             columnGap: 0,
-            margin: -margin
+            margin: `0 ${-margin}px ${-margin}px`
           }}
         >
           {reorder(columns, this.props.items).map(item => (
@@ -60,7 +60,12 @@ export class Masonry extends React.PureComponent<Props, State> {
               style={{
                 breakAfter: item.isLast ? "column" : "avoid-column",
                 breakInside: "avoid",
-                padding: margin
+                // When two block elements are stacked on top of one another, the vertical space
+                // between them is the larger between the one on top's margin-bottom and the one
+                // on the bottom's margin-top.
+                // https://css-tricks.com/good-ol-margin-collapsing/
+                margin: `0 ${margin}px ${gap}px`,
+                pageBreakInside: "avoid"
               }}
             >
               {item.node}

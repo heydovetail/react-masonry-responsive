@@ -4,7 +4,7 @@ import { Masonry, MasonryItem } from "../";
 
 storiesOf("Masonry", module)
   .add("Example", () => {
-    return <Masonry minColumnWidth={128} items={generateItems(50)} />;
+    return <Masonry minColumnWidth={256} items={generateItems(50)} />;
   })
   .add("Custom gap", () => {
     return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
@@ -41,7 +41,7 @@ function Box(props: { id: number; height: number }) {
       style={{
         backgroundColor: COLORS[props.id % COLORS.length],
         color: "#fff",
-        borderRadius: "3px",
+        borderRadius: "4px",
         height: props.height,
         padding: "24px",
         width: "100%"

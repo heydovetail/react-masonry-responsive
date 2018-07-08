@@ -2,16 +2,15 @@
 
 A lightweight, performant, and responsive masonry layout for React.
 
-![Screenshot of react-masonry-responsive](https://raw.githubusercontent.com/heydovetail/react-masonry-responsive/master/img/screenshot.png)
+![Demo of react-masonry-responsive](https://raw.githubusercontent.com/heydovetail/react-masonry-responsive/master/img/demo.gif)
 
 ## Features
 
-* Easy-to-use interface – just pass items to render along with desired column width
-* Uses basic CSS absolute positioning for compatibility, simplicity, and performance
-* Fully responsive column width and count based on container size
+* Satisfies the masonry requirements laid out in [this article](https://regisphilibert.com/blog/2017/12/pure-css-masonry-layout-with-flexbox-grid-columns-in-2018/)
+* Easy-to-use interface – pass items along with desired column width
+* Fully responsive column width and column count based on container size
 * Full-bleed columns – no extra gutter on the left and right
-* Flexbox fallback with flex-wrap for server-side rendering
-* Small library with few dependencies
+* Small library with one dependency
 * No cheesy baked-in animations
 
 ## Installation
@@ -59,16 +58,13 @@ function AdvancedExample(props: (items: MasonryItem)) {
 
 ## Props
 
-Items can either be an array of React.ReactNodes, and the library will set the key on each, or, you can pass in an array of objects with keys.
+Items are an array of objects with a unique key and a React node. Ideally, the key would be something like a UUID.
 
 ```jsx
-export interface MasonryKeyedItem {
+export interface MasonryItem {
   key: string | number;
   node: React.ReactNode;
 }
-
-// Array of ReactNodes or objects with nodes and keys.
-export type MasonryItem = MasonryKeyedItem | React.ReactNode;
 
 export interface Props {
   // Optional. Used for server-side rendering when there’s
@@ -81,8 +77,7 @@ export interface Props {
   gap?: number;
 
   // An array of items to render in the masonry layout. Each item
-  // should either be a React.ReactNode component to render, or an object
-  // with the component and an optional unique key.
+  // should be an object a unique key and a node (React component).
   items: MasonryItem[];
 
   // The desired width for each column in the masonry layout. When columns
@@ -90,6 +85,18 @@ export interface Props {
   minColumnWidth: number;
 }
 ```
+
+## How it works
+
+This library uses [CSS columns](https://developer.mozilla.org/en-US/docs/Web/CSS/columns) rather than transforms, absolute positioning, flexbox, or grid. CSS columns are the simplest way to create a responsive masonry layout, however, by default, columns display content from top-to-bottom, rather than left-to-right, as shown in [this demo](https://masonry-css-js.netlify.com/). This is because columns are primarily designed for text layout, to emulate a newspaper or magazine.
+
+This library has an algorithm that reorders items based on the number of columns (determined by the container width), and then uses the CSS properties [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) and [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) to further control which columns items should appear in to preserve the left-to-right ordering.
+
+## Known issues
+
+The CSS property [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) can be used to force items to break into a new column. Without this property, if the items in the masonry layout are significantly varied in height, some will ‘jump’ to the next column rather than add to the end of a column, breaking the left-to-right order. Firefox does not support the property `break-after`, so in Firefox, some items will end up near the top of the masonry grid, rather than at the bottom.
+
+There’s [a polyfill by Adobe](https://github.com/adobe-webplatform/css-regions-polyfill) that might add support for `break-after` in Firefox.
 
 ## Build status
 

@@ -31,7 +31,7 @@ export interface State {
 
 export class Masonry extends React.PureComponent<Props, State> {
   public readonly state: State = {
-    columns: 5
+    columns: 4
   };
 
   public render() {
@@ -47,43 +47,49 @@ export class Masonry extends React.PureComponent<Props, State> {
           margin: -gap
         }}
       >
-        {reorderedItems.map(i => i.node)}
+        {reorderedItems.map(item => (
+          <div
+            key={item.key}
+            style={{
+              breakAfter: item.isLast ? "column" : "avoid-column",
+              breakInside: "avoid",
+              padding: gap / 2
+            }}
+          >
+            {item.node}
+          </div>
+        ))}
       </div>
     );
   }
 
   private reorder = () => {
-    const { gap = 32, items } = this.props;
+    const { items } = this.props;
     const { columns } = this.state;
 
-    const reorderedItems: MasonryItem[] = [];
+    const reorderedItems: RenderedItem[] = [];
     let col = 0;
 
     while (col < columns) {
       for (let i = 0; i < items.length; i += columns) {
         const curr = items[i + col];
 
-        if (curr !== null) {
+        if (curr != null) {
           reorderedItems.push({
             key: curr.key,
-            node: (
-              <div
-                key={curr.key}
-                style={{
-                  breakAfter: i + columns >= items.length ? "column" : "avoid-column",
-                  breakInside: "avoid",
-                  padding: gap / 2
-                }}
-              >
-                {curr.node}
-              </div>
-            )
+            isLast: false,
+            node: curr.node
           });
         }
       }
+      reorderedItems[reorderedItems.length - 1].isLast = true;
       col++;
     }
 
     return reorderedItems;
   };
+}
+
+interface RenderedItem extends MasonryItem {
+  isLast: boolean;
 }

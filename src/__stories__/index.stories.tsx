@@ -9,7 +9,10 @@ storiesOf("Masonry", module)
   .add("Custom gap", () => {
     return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
   })
-  .add("ContainerWidth", () => {
+  .add("Wide column width", () => {
+    return <Masonry minColumnWidth={600} items={generateItems(50)} />;
+  })
+  .add("Server-side rendering", () => {
     return (
       <div style={{ margin: "0 auto", maxWidth: 800 }}>
         <Masonry containerWidth={800} minColumnWidth={128} items={generateItems(50)} />

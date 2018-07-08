@@ -29,83 +29,86 @@ export interface Props {
 }
 
 export interface State {
-  columns: number | null;
+  containerWidth?: number;
 }
 
 export class Masonry extends React.PureComponent<Props, State> {
   public state: State = {
-    columns: null
+    containerWidth: this.props.containerWidth
   };
 
   public render() {
-    const { gap = DEFAULT_GAP } = this.props;
-    const reorderedItems = this.reorder();
+    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
+    const { containerWidth } = this.state;
+
+    const margin = gap / 2;
+    const columns = containerWidth !== undefined ? calculateColumnCount(containerWidth, gap, minColumnWidth) : null;
+    let content: React.ReactNode | null = null;
+
+    if (columns !== null) {
+      content = (
+        <div
+          style={{
+            columns: `auto ${columns}`,
+            columnGap: 0,
+            margin: -margin
+          }}
+        >
+          {reorder(columns, this.props.items).map(item => (
+            <div
+              key={item.key}
+              style={{
+                breakAfter: item.isLast ? "column" : "avoid-column",
+                breakInside: "avoid",
+                padding: margin
+              }}
+            >
+              {item.node}
+            </div>
+          ))}
+        </div>
+      );
+    }
 
     return (
-      <div
-        style={{
-          columns: `auto ${this.state.columns}`,
-          columnGap: 0,
-          margin: -gap
-        }}
-      >
-        {reorderedItems
-          ? reorderedItems.map(item => (
-              <div
-                key={item.key}
-                style={{
-                  breakAfter: item.isLast ? "column" : "avoid-column",
-                  breakInside: "avoid",
-                  padding: gap / 2
-                }}
-              >
-                {item.node}
-              </div>
-            ))
-          : null}
-        {process.env.NODE_ENV === "test" ? null : <ReactResizeDetector handleWidth onResize={this.resize} />}
-      </div>
+      <>
+        {content}
+        {process.env.NODE_ENV === "test" ? null : (
+          <ReactResizeDetector handleWidth onResize={width => this.setState({ containerWidth: width })} />
+        )}
+      </>
     );
   }
-
-  private reorder = () => {
-    const { items } = this.props;
-    const { columns } = this.state;
-
-    if (columns === null) {
-      return null;
-    }
-
-    const reorderedItems: RenderedItem[] = [];
-    let col = 0;
-
-    while (col < columns) {
-      for (let i = 0; i < items.length; i += columns) {
-        const curr = items[i + col];
-
-        if (curr != null) {
-          reorderedItems.push({
-            key: curr.key,
-            isLast: false,
-            node: curr.node
-          });
-        }
-      }
-      reorderedItems[reorderedItems.length - 1].isLast = true;
-      col++;
-    }
-
-    return reorderedItems;
-  };
-
-  private readonly resize = (containerWidth: number) => {
-    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
-    let columns = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
-    columns = Math.max(columns, 1);
-    this.setState({ columns });
-  };
 }
 
-interface RenderedItem extends MasonryItem {
+interface ReorderedItem extends MasonryItem {
   isLast: boolean;
+}
+
+function reorder(columns: number, items: MasonryItem[]): ReorderedItem[] {
+  const reorderedItems: ReorderedItem[] = [];
+  let col = 0;
+
+  while (col < columns) {
+    for (let i = 0; i < items.length; i += columns) {
+      const curr = items[i + col];
+
+      if (curr != null) {
+        reorderedItems.push({
+          key: curr.key,
+          isLast: false,
+          node: curr.node
+        });
+      }
+    }
+    reorderedItems[reorderedItems.length - 1].isLast = true;
+    col++;
+  }
+
+  return reorderedItems;
+}
+
+function calculateColumnCount(containerWidth: number, gap: number, minColumnWidth: number): number {
+  const columns = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
+  return Math.max(columns, 1);
 }

@@ -3,20 +3,20 @@ import * as React from "react";
 import { Masonry, MasonryItem } from "../";
 
 storiesOf("Masonry", module)
-  .add("default", () => {
+  .add("Example", () => {
     return <Masonry minColumnWidth={128} items={generateItems(50)} />;
   })
-  .add("custom gutter", () => {
+  .add("Custom gap", () => {
     return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
   })
-  .add("with containerWidth", () => {
+  .add("ContainerWidth", () => {
     return (
       <div style={{ margin: "0 auto", maxWidth: 800 }}>
         <Masonry containerWidth={800} minColumnWidth={128} items={generateItems(50)} />
       </div>
     );
   })
-  .add("lots of items", () => {
+  .add("Lots of items", () => {
     return <Masonry minColumnWidth={128} items={generateItems(1000)} />;
   });
 
@@ -24,7 +24,7 @@ function generateItems(count: number) {
   const items: MasonryItem[] = [];
 
   for (let step = 1; step < count + 1; step++) {
-    items.push(<Box id={step} height={Math.random() * (500 - 100) + 100} />);
+    items.push({ key: step, node: <Box id={step} height={Math.random() * (1000 - 100) + 100} /> });
   }
 
   return items;

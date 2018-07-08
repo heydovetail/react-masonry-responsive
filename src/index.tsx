@@ -1,15 +1,9 @@
 import * as React from "react";
-import ReactResizeDetector from "react-resize-detector";
 
-const DEFAULT_GAP = 32;
-
-export interface MasonryKeyedItem {
+export interface MasonryItem {
   key: string | number;
   node: React.ReactNode;
 }
-
-// Array of ReactNodes or objects with nodes and keys.
-export type MasonryItem = MasonryKeyedItem | React.ReactNode;
 
 export interface Props {
   // Optional. Used for server-side rendering when there’s
@@ -32,173 +26,64 @@ export interface Props {
 }
 
 export interface State {
-  containerWidth?: number;
+  columns: number;
 }
 
 export class Masonry extends React.PureComponent<Props, State> {
   public readonly state: State = {
-    containerWidth: this.props.containerWidth
+    columns: 5
   };
 
-  private container: HTMLDivElement | null = null;
-
-  public componentDidMount() {
-    this.applyMasonryLayout();
-  }
-
-  public componentDidUpdate() {
-    this.applyMasonryLayout();
-  }
-
   public render() {
-    const { gap = DEFAULT_GAP, items } = this.props;
-    const margin = gap / 2;
-    const layout = this.determineLayout();
+    const { gap = 32 } = this.props;
+    const reorderedItems = this.reorder();
 
     return (
       <div
-        ref={div => {
-          this.container = div;
-        }}
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          margin: -margin,
-          minHeight: 1,
-          position: "relative"
+          columns: `auto ${this.state.columns}`,
+          columnFill: "balance-all",
+          columnGap: 0,
+          margin: -gap
         }}
       >
-        {layout !== null
-          ? items.map(
-              (item, i) =>
-                item != null ? (
-                  <div
-                    data-masonary-item
-                    key={isKeyedItem(item) ? item.key : i}
-                    style={{
-                      flex: "1 1 auto",
-                      margin: margin,
-                      width: layout.width
-                    }}
-                  >
-                    {isKeyedItem(item) ? item.node : item}
-                  </div>
-                ) : null
-            )
-          : null}
-        {process.env.NODE_ENV === "test" ? null : (
-          <ReactResizeDetector
-            handleWidth
-            onResize={width => {
-              this.setState({ containerWidth: width });
-            }}
-          />
-        )}
+        {reorderedItems.map(i => i.node)}
       </div>
     );
   }
 
-  private readonly determineLayout = () => {
-    const { containerWidth } = this.state;
-    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
+  private reorder = () => {
+    const { gap = 32, items } = this.props;
+    const { columns } = this.state;
 
-    if (containerWidth === undefined) {
-      return null;
-    }
+    const reorderedItems: MasonryItem[] = [];
+    let col = 0;
 
-    let adjustedContainerWidth = containerWidth;
+    while (col < columns) {
+      for (let i = 0; i < items.length; i += columns) {
+        const curr = items[i + col];
 
-    // The container will be larger initially due to the negative margin added to get the
-    // items to line up correctly for server-side rendering. We need to account for the extra margin
-    // in order to avoid a ‘snap’ that occurs when applyMasonryLayout() is run later.
-    if (this.props.containerWidth !== undefined && containerWidth > this.props.containerWidth) {
-      adjustedContainerWidth = containerWidth - gap;
-    }
-
-    // Determine the number of columns we can fit in the container.
-    let count = Math.floor((adjustedContainerWidth + gap) / (minColumnWidth + gap));
-
-    // Prevent count from becoming negative when there’s space for one or less columns.
-    count = Math.max(count, 1);
-
-    // Determine the width of each column.
-    let width = (adjustedContainerWidth - gap * (count - 1)) / count;
-
-    // Allow items to shrink smaller than the minColumnWidth if necessary.
-    width = width > adjustedContainerWidth ? adjustedContainerWidth : width;
-
-    return { count, gap, width };
-  };
-
-  private readonly applyMasonryLayout = microTaskDebounce(() => {
-    const layout = this.determineLayout();
-
-    if (this.container === null || layout === null) {
-      return;
-    }
-
-    const { count, gap, width } = layout;
-    const columnHeights = zeroes(count);
-    const elementHeights: number[] = [];
-    const children = Array.prototype.slice.call(this.container.children);
-
-    // Measure the size of all children elements without causing reflows.
-    children.forEach((element: HTMLElement) => {
-      if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
-        elementHeights.push(element.clientHeight);
+        if (curr !== null) {
+          reorderedItems.push({
+            key: curr.key,
+            node: (
+              <div
+                key={curr.key}
+                style={{
+                  breakAfter: i + columns >= items.length ? "column" : "avoid-column",
+                  breakInside: "avoid",
+                  padding: gap / 2
+                }}
+              >
+                {curr.node}
+              </div>
+            )
+          });
+        }
       }
-    });
-
-    // Iterate through the children elements and apply the positioning styles.
-    children.forEach((element: HTMLElement, i: number) => {
-      if (element instanceof HTMLElement && element.getAttribute("data-masonary-item") !== null) {
-        // Index of the column that the item should be placed in.
-        const column = columnHeights.indexOf(Math.min(...columnHeights));
-
-        // Set absolute positioning styles
-        element.style.top = `${columnHeights[column]}px`;
-        element.style.left = `${column * (width + gap)}px`;
-        element.style.position = "absolute";
-
-        // Remove fallback styles for server-side rendering
-        element.style.flex = null;
-        element.style.margin = null;
-
-        // Increment the height of the column
-        columnHeights[column] += elementHeights[i] + gap;
-      }
-    });
-
-    // Grow the the container to accommodate the highest column
-    this.container.style.height = `${Math.max(...columnHeights) - gap}px`;
-
-    // Remove the fallback server-side rendering style on the container
-    this.container.style.margin = null;
-  });
-}
-
-function isKeyedItem(item: MasonryItem): item is MasonryKeyedItem {
-  return item !== null && typeof item === "object" && "node" in item;
-}
-
-function zeroes(n: number) {
-  return Array(...Array(n)).map(() => 0);
-}
-
-/**
- * Debounce a function using a microtask.
- * Necessary to allow typestyle-react to flush styles introduced during
- * component render method.
- */
-function microTaskDebounce(fn: () => void): () => void {
-  let scheduled = false;
-  return async () => {
-    if (!scheduled) {
-      scheduled = true;
-      // Promise is scheduled as a microtask.
-      await Promise.resolve();
-      scheduled = false;
-      fn();
+      col++;
     }
+
+    return reorderedItems;
   };
 }

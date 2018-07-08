@@ -91,9 +91,8 @@ function reorder(columns: number, items: MasonryItem[]): ReorderedItem[] {
 
   while (col < columns) {
     for (let i = 0; i < items.length; i += columns) {
-      const curr = items[i + col];
-
-      if (curr != null) {
+      if (i + col < items.length) {
+        const curr = items[i + col];
         reorderedItems.push({
           key: curr.key,
           isLast: false,

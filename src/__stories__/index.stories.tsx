@@ -89,7 +89,12 @@ function randomSentence() {
     "burn"
   ];
   const text = [];
-  let x = 20;
-  while (--x) text.push(words[Math.floor(Math.random() * words.length)]);
+
+  let x = 0;
+  while (x < 20) {
+    text.push(words[Math.floor(Math.random() * words.length)]);
+    x++;
+  }
+
   return text.join(" ");
 }

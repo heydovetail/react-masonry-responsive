@@ -65,7 +65,11 @@ export class Masonry extends React.PureComponent<Props, State> {
                 // on the bottom's margin-top.
                 // https://css-tricks.com/good-ol-margin-collapsing/
                 margin: `0 ${margin}px ${gap}px`,
-                pageBreakInside: "avoid"
+                pageBreakInside: "avoid",
+                // There’s a bug in Chrome where items inside CSS columns will be cropped if they have
+                // overflowing content. Adding transform enables hardware acceleration as a workaround.
+                // https://stackoverflow.com/a/41163057
+                transform: "translate3d(0, 0, 0)"
               }}
             >
               {item.node}

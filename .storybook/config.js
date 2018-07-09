@@ -3,7 +3,8 @@ import { cssRule, forceRenderStyles } from "typestyle";
 
 cssRule("*", {
   boxSizing: "border-box",
-  "-webkit-tap-highlight-color": ["rgba(0,0,0,0)", "transparent"]
+  "-webkit-tap-highlight-color": ["rgba(0,0,0,0)", "transparent"],
+  "-webkit-font-smoothing": "antialiased"
 });
 
 cssRule("html", {

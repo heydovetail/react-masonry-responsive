@@ -50,8 +50,7 @@ export class Masonry extends React.PureComponent<Props, State> {
         <div
           style={{
             columns: `auto ${columns}`,
-            columnGap: 0,
-            margin: `0 ${-margin}px ${-margin}px`
+            columnGap: gap
           }}
         >
           {reorder(columns, this.props.items).map(item => (
@@ -60,16 +59,8 @@ export class Masonry extends React.PureComponent<Props, State> {
               style={{
                 breakAfter: item.isLast ? "column" : "avoid-column",
                 breakInside: "avoid",
-                // When two block elements are stacked on top of one another, the vertical space
-                // between them is the larger between the one on top's margin-bottom and the one
-                // on the bottom's margin-top.
-                // https://css-tricks.com/good-ol-margin-collapsing/
-                margin: `0 ${margin}px ${gap}px`,
-                pageBreakInside: "avoid",
-                // There’s a bug in Chrome where items inside CSS columns will be cropped if they have
-                // overflowing content. Adding transform enables hardware acceleration as a workaround.
-                // https://stackoverflow.com/a/41163057
-                transform: "translate3d(0, 0, 0)"
+                marginBottom: gap,
+                pageBreakInside: "avoid"
               }}
             >
               {item.node}

@@ -97,7 +97,7 @@ This library has an algorithm that reorders items based on the number of columns
 
 The CSS property [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) can be used to force items to break into a new column. Without this property, if the items in the masonry layout are significantly varied in height, some will ‘jump’ to the next column rather than add to the end of a column, breaking the left-to-right order. Firefox does not support the property `break-after`, so in Firefox, some items will end up near the top of the masonry grid, rather than at the bottom.
 
-There’s [a polyfill by Adobe](https://github.com/adobe-webplatform/css-regions-polyfill) that might add support for `break-after` in Firefox.
+There’s [a CSS regions polyfill](https://github.com/FremyCompany/css-regions-polyfill) that might add support for `break-after` in Firefox.
 
 ## Build status
 

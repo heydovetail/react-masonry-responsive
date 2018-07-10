@@ -38,27 +38,35 @@ export class Masonry extends React.PureComponent<Props, State> {
   };
 
   public render() {
-    const { gap = DEFAULT_GAP, minColumnWidth } = this.props;
+    const { gap = DEFAULT_GAP, items, minColumnWidth } = this.props;
     const { containerWidth } = this.state;
+    const margin = gap / 2;
 
     const columns = containerWidth !== undefined ? calculateColumnCount(containerWidth, gap, minColumnWidth) : null;
     let content: React.ReactNode | null = null;
 
+    // Necessary for a strange Chrome columns bug. Basically we need to trash
+    // the whole columns div when the items change otherwise Chrome messes up.
+    let key: string = "";
+    items.forEach(i => (key += i.key));
+
     if (columns !== null) {
       content = (
         <div
+          key={key}
           style={{
             columns: `auto ${columns}`,
-            columnGap: gap
+            columnGap: 0,
+            margin: -margin
           }}
         >
-          {reorder(columns, this.props.items).map(item => (
+          {reorder(columns, items).map(item => (
             <div
               key={item.key}
               style={{
                 breakAfter: item.isLast ? "column" : "avoid-column",
                 breakInside: "avoid",
-                marginBottom: gap,
+                padding: margin,
                 pageBreakInside: "avoid"
               }}
             >

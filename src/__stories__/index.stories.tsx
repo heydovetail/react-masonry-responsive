@@ -4,7 +4,7 @@ import { Masonry, MasonryItem } from "../";
 
 storiesOf("Masonry", module)
   .add("Example", () => {
-    return <Masonry minColumnWidth={256} items={generateItems(50)} />;
+    return <Masonry minColumnWidth={128} items={generateItems(50)} />;
   })
   .add("Custom gap", () => {
     return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
@@ -15,9 +15,32 @@ storiesOf("Masonry", module)
   .add("Server-side rendering", () => {
     return (
       <div style={{ margin: "0 auto", maxWidth: 800 }}>
-        <Masonry containerWidth={800} minColumnWidth={128} items={generateItems(50)} />
+        <Masonry containerWidth={800} minColumnWidth={256} items={generateItems(50)} />
       </div>
     );
+  })
+  .add("Items changing", () => {
+    interface State {
+      items: MasonryItem[];
+    }
+
+    class Example extends React.PureComponent<{}, State> {
+      public state: State = {
+        items: generateItems(25)
+      };
+
+      public componentDidMount() {
+        window.setInterval(() => {
+          this.setState({ items: generateItems(25) });
+        }, 1000);
+      }
+
+      public render() {
+        return <Masonry minColumnWidth={256} items={this.state.items} />;
+      }
+    }
+
+    return <Example />;
   })
   .add("Lots of items", () => {
     return <Masonry minColumnWidth={128} items={generateItems(1000)} />;
@@ -33,21 +56,23 @@ function generateItems(count: number) {
   return items;
 }
 
-const COLORS = ["#f84f77", "#512da8", "#5182f8", "#1eb8c1", "#009688"];
-
 function Box(props: { id: number }) {
   return (
     <div
       style={{
-        backgroundColor: COLORS[props.id % COLORS.length],
-        color: "#fff",
+        backgroundColor: "#fff",
+        border: "none",
         borderRadius: "4px",
+        boxShadow: "0 0 0 1px rgba(36, 18, 77, .1), 0 2px 4px -2px rgba(36, 18, 77, .2)",
+        color: "#24124d",
         lineHeight: "24px",
         padding: "24px",
         width: "100%"
       }}
     >
-      <p>{props.id}</p>
+      <p>
+        <b>{props.id}</b>
+      </p>
       <p>{randomSentence()}</p>
     </div>
   );
@@ -55,7 +80,7 @@ function Box(props: { id: number }) {
 
 function randomSentence() {
   const words = [
-    "The sky",
+    "the sky",
     "above",
     "the port",
     "was",
@@ -63,11 +88,9 @@ function randomSentence() {
     "tuned",
     "to",
     "a dead channel",
-    ".",
-    "All",
+    "all",
     "this happened",
     "more or less",
-    ".",
     "I",
     "had",
     "the story",
@@ -81,8 +104,7 @@ function randomSentence() {
     "it",
     "was",
     "a different story",
-    ".",
-    "It",
+    "it",
     "was",
     "a pleasure",
     "to",

@@ -12,9 +12,10 @@ cssRule("html", {
 });
 
 cssRule("body", {
+  background: "#f4f3f6",
   fontFamily: "sans-serif",
-  margin: "48px",
-  padding: 0
+  margin: 0,
+  padding: 48
 });
 
 forceRenderStyles();

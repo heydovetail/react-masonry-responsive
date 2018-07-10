@@ -5,7 +5,7 @@
   "main": "./lib.commonjs/index.js",
   "module": "./lib.es2015/index.js",
   "name": "react-masonry-responsive",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "types": "./lib.es2015/index.d.ts",
   "license": "Apache-2.0",
   "scripts": {

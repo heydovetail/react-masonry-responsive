@@ -47,19 +47,25 @@ storiesOf("Masonry", module)
   })
   .add("Empty", () => {
     return <Masonry minColumnWidth={128} items={[]} />;
+  })
+  .add("Overflow", () => {
+    return <Masonry gap={16} minColumnWidth={128} items={generateItems(20, true)} />;
   });
 
-function generateItems(count: number) {
+function generateItems(count: number, overflowComponent?: boolean) {
   const items: MasonryItem[] = [];
 
   for (let step = 1; step < count + 1; step++) {
-    items.push({ key: step, node: <Box id={step} /> });
+    items.push({
+      key: step,
+      node: <Box id={step} overflowComponent={overflowComponent} />
+    });
   }
 
   return items;
 }
 
-function Box(props: { id: number }) {
+function Box(props: { id: number; overflowComponent?: boolean }) {
   return (
     <div
       style={{
@@ -70,6 +76,7 @@ function Box(props: { id: number }) {
         color: "#24124d",
         lineHeight: "24px",
         padding: "24px",
+        position: "relative",
         width: "100%"
       }}
     >
@@ -77,6 +84,19 @@ function Box(props: { id: number }) {
         <b>{props.id}</b>
       </p>
       <p>{randomSentence()}</p>
+      {props.overflowComponent === true ? (
+        <div
+          style={{
+            backgroundColor: "#512DA8",
+            borderRadius: "100%",
+            position: "absolute",
+            height: 32,
+            left: -16,
+            top: -16,
+            width: 32
+          }}
+        />
+      ) : null}
     </div>
   );
 }

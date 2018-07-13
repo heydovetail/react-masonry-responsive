@@ -1,5 +1,6 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
+import { isSafari } from "./userAgent";
 
 const DEFAULT_GAP = 32;
 
@@ -67,7 +68,8 @@ export class Masonry extends React.PureComponent<Props, State> {
                 breakAfter: item.isLast ? "column" : "avoid-column",
                 breakInside: "avoid",
                 padding: margin,
-                pageBreakInside: "avoid"
+                pageBreakInside: "avoid",
+                willChange: isSafari ? undefined : "transform"
               }}
             >
               {item.node}

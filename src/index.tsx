@@ -50,7 +50,7 @@ export class Masonry extends React.PureComponent<Props, State> {
     let key: string = "";
     items.forEach(i => (key += i.key));
 
-    if (columns !== null) {
+    if (columns !== null && items.length > 0) {
       content = (
         <div
           key={key}

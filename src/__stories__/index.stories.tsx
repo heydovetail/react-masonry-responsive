@@ -44,6 +44,9 @@ storiesOf("Masonry", module)
   })
   .add("Lots of items", () => {
     return <Masonry minColumnWidth={128} items={generateItems(1000)} />;
+  })
+  .add("Empty", () => {
+    return <Masonry minColumnWidth={128} items={[]} />;
   });
 
 function generateItems(count: number) {

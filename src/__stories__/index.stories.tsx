@@ -43,13 +43,10 @@ storiesOf("Masonry", module)
     return <Example />;
   })
   .add("Lots of items", () => {
-    return <Masonry minColumnWidth={128} items={generateItems(1000)} />;
+    return <Masonry minColumnWidth={128} items={generateItems(2000)} />;
   })
   .add("Empty", () => {
     return <Masonry minColumnWidth={128} items={[]} />;
-  })
-  .add("Overflow", () => {
-    return <Masonry gap={16} minColumnWidth={128} items={generateItems(20, true)} />;
   });
 
 function generateItems(count: number, overflowComponent?: boolean) {

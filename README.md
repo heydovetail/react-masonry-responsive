@@ -87,26 +87,6 @@ export interface Props {
 }
 ```
 
-## How it works
-
-This library uses [CSS columns](https://developer.mozilla.org/en-US/docs/Web/CSS/columns) rather than transforms, absolute positioning, flexbox, or grid. CSS columns are the simplest way to create a responsive masonry layout, however, by default, columns display content from top-to-bottom, rather than left-to-right, as shown in [this demo](https://masonry-css-js.netlify.com/). This is because columns are primarily designed for text layout, to emulate a newspaper or magazine.
-
-This library has an algorithm that reorders items based on the number of columns (determined by the container width), and then uses the CSS properties [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) and [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) to further control which columns items should appear in to preserve the left-to-right ordering. Thanks to Jesse Korzan for [the original inspiration](https://hackernoon.com/masonry-layout-technique-react-demo-of-100-css-control-of-the-view-e4190fa4296) for the technique!
-
-## Known issues
-
-### Sort order in Firefox
-
-The CSS property [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) can be used to force items to break into a new column. Without this property, if the items in the masonry layout are significantly varied in height, some will ‘jump’ to the next column rather than add to the end of a column, breaking the left-to-right order. Firefox does not support the property `break-after`, so in Firefox, some items will end up near the top of the masonry grid, rather than at the bottom.
-
-There’s [a CSS regions polyfill](https://github.com/FremyCompany/css-regions-polyfill) that might add support for `break-after` in Firefox.
-
-### Overflow in Safari
-
-Chrome has a bug where overflowing children are cut off in CSS columns (issues [84030](https://bugs.chromium.org/p/chromium/issues/detail?id=84030) and [406349](https://bugs.chromium.org/p/chromium/issues/detail?id=406349)). The workaround for Chrome is to add the `will-change: transform;` CSS property, however, this causes [some columns in Safari to completely disappear](https://stackoverflow.com/questions/23129655/css-columns-are-vanishing-only-on-safari-mac).
-
-At the moment, this library detects Safari using a fairly basic userAgent check, and does not apply the `will-change` property. This causes overflowing content to be cut off in Safari.
-
 ## Build status
 
 [![CircleCI](https://circleci.com/gh/heydovetail/react-masonry-responsive.svg?style=svg)](https://circleci.com/gh/heydovetail/react-masonry-responsive)

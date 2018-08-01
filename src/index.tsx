@@ -1,6 +1,5 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
-import { isSafari } from "./userAgent";
 
 const DEFAULT_GAP = 32;
 
@@ -42,37 +41,21 @@ export class Masonry extends React.PureComponent<Props, State> {
     const { gap = DEFAULT_GAP, items, minColumnWidth } = this.props;
     const { containerWidth } = this.state;
     const margin = gap / 2;
-
-    const columns = containerWidth !== undefined ? calculateColumnCount(containerWidth, gap, minColumnWidth) : null;
+    const count = containerWidth !== undefined ? columnCount(containerWidth, gap, minColumnWidth) : null;
     let content: React.ReactNode | null = null;
 
-    // Necessary for a strange Chrome columns bug. Basically we need to trash
-    // the whole columns div when the items change otherwise Chrome messes up.
-    let key: string = "";
-    items.forEach(i => (key += i.key));
+    if (count !== null && items.length > 0) {
+      const columns = sort(count, items);
 
-    if (columns !== null && items.length > 0) {
       content = (
-        <div
-          key={key}
-          style={{
-            columns: `auto ${columns}`,
-            columnGap: 0,
-            margin: -margin
-          }}
-        >
-          {reorder(columns, items).map(item => (
-            <div
-              key={item.key}
-              style={{
-                breakAfter: item.isLast ? "column" : "avoid-column",
-                breakInside: "avoid",
-                padding: margin,
-                pageBreakInside: "avoid",
-                willChange: isSafari ? undefined : "transform"
-              }}
-            >
-              {item.node}
+        <div style={{ display: "flex", margin: -margin }}>
+          {columns.map((c, i) => (
+            <div key={i} style={{ flex: `1 1 ${100 / columns.length}%` }}>
+              {c.map(i => (
+                <div key={i.key} style={{ padding: margin }}>
+                  {i.node}
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -90,33 +73,22 @@ export class Masonry extends React.PureComponent<Props, State> {
   }
 }
 
-interface ReorderedItem extends MasonryItem {
-  isLast: boolean;
-}
+function sort(count: number, items: MasonryItem[]): MasonryItem[][] {
+  const columns: MasonryItem[][] = [];
+  let curr = 0;
 
-function reorder(columns: number, items: MasonryItem[]): ReorderedItem[] {
-  const reorderedItems: ReorderedItem[] = [];
-  let col = 0;
-
-  while (col < columns) {
-    for (let i = 0; i < items.length; i += columns) {
-      if (i + col < items.length) {
-        const curr = items[i + col];
-        reorderedItems.push({
-          key: curr.key,
-          isLast: false,
-          node: curr.node
-        });
-      }
+  for (let i = 0; i < items.length; i++) {
+    if (columns[curr] === undefined) {
+      columns[curr] = [];
     }
-    reorderedItems[reorderedItems.length - 1].isLast = true;
-    col++;
+    columns[curr].push(items[i]);
+    curr = curr < count - 1 ? curr + 1 : 0;
   }
 
-  return reorderedItems;
+  return columns;
 }
 
-function calculateColumnCount(containerWidth: number, gap: number, minColumnWidth: number): number {
+function columnCount(containerWidth: number, gap: number, minColumnWidth: number): number {
   const columns = Math.floor((containerWidth + gap) / (minColumnWidth + gap));
   return Math.max(columns, 1);
 }

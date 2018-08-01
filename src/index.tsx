@@ -73,14 +73,14 @@ export class Masonry extends React.PureComponent<Props, State> {
   }
 }
 
-function sort(count: number, items: MasonryItem[]): MasonryItem[][] {
-  const columns: MasonryItem[][] = [];
-  let curr = 0;
+type Column = MasonryItem[];
 
-  for (let i = 0; i < items.length; i++) {
-    if (columns[curr] === undefined) {
-      columns[curr] = [];
-    }
+function sort(count: number, items: MasonryItem[]): Column[] {
+  let columns: Column[] = Array.apply([], Array(count));
+  columns = columns.map(() => []);
+
+  let curr = 0;
+  for (const i in items) {
     columns[curr].push(items[i]);
     curr = curr < count - 1 ? curr + 1 : 0;
   }

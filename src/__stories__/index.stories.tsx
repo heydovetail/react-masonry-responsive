@@ -6,6 +6,13 @@ storiesOf("Masonry", module)
   .add("Example", () => {
     return <Masonry minColumnWidth={128} items={generateItems(50)} />;
   })
+  .add("Contained", () => {
+    return (
+      <div style={{ margin: "0 auto", maxWidth: 960, padding: 16 }}>
+        <Masonry minColumnWidth={272} items={generateItems(50)} />
+      </div>
+    );
+  })
   .add("Custom gap", () => {
     return <Masonry gap={96} minColumnWidth={200} items={generateItems(50)} />;
   })

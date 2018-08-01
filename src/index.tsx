@@ -50,7 +50,7 @@ export class Masonry extends React.PureComponent<Props, State> {
       content = (
         <div style={{ display: "flex", margin: -margin }}>
           {columns.map((c, i) => (
-            <div key={i} style={{ flex: `1 1 ${100 / columns.length}%` }}>
+            <div key={i} style={{ flex: "1 1 auto", width: `${100 / columns.length}%` }}>
               {c.map(i => (
                 <div key={i.key} style={{ padding: margin }}>
                   {i.node}

@@ -11,7 +11,7 @@ A lightweight, performant, and responsive masonry layout for React.
 * Fully responsive column width and column count based on container size
 * Full-bleed columns – no extra gutter on the left and right
 * Server-side render support for frameworks like [Gatsby](https://www.gatsbyjs.org/)
-* Small library with one dependency
+* Small library with two dependencies
 * No cheesy baked-in animations
 
 ## Installation

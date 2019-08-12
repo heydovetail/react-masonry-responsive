@@ -41,7 +41,7 @@ export class Masonry extends React.PureComponent<Props, State> {
   };
 
   public render() {
-    const { gap = DEFAULT_GAP, items, minColumnWidth,equalHeight } = this.props;
+    const { gap = DEFAULT_GAP, items, minColumnWidth, equalHeight } = this.props;
     const { containerWidth } = this.state;
     const margin = gap / 2;
     const count = containerWidth !== undefined ? columnCount(containerWidth, gap, minColumnWidth) : null;

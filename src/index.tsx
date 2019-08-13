@@ -51,7 +51,7 @@ export class Masonry extends React.PureComponent<Props, State> {
       const columns = sort(count, items);
 
       content = equalHeight ? (
-          <div style={{display: "flex", margin: -margin, justifyContent: "space-between", flexWrap: "wrap"}}>
+          <div style={{display: "flex", margin: -margin, flexWrap: "wrap"}}>
               {columns.map((c) => (
                   c.map(i => (
                       <div key={i.key} style={{padding: margin, width: `${100 / columns.length}%`}}>

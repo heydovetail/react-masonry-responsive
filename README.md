@@ -76,6 +76,9 @@ export interface Props {
   // Optional gap between items, both horizontally and vertically.
   // Defaults to 32px.
   gap?: number;
+  
+  // Optional. Equalize the height of items on each row.
+  equalHeight?: boolean;
 
   // An array of items to render in the masonry layout. Each item
   // should be an object a unique key and a node (React component).

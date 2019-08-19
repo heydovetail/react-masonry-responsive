@@ -14,6 +14,9 @@ export interface Props {
   // Pass this through for server-side rendering support.
   containerWidth?: number;
 
+  // Optional. Equalize the height of items on each row.
+  equalHeight?: boolean;
+
   // Optional gap between items, both horizontally and vertically.
   // Defaults to 32px.
   gap?: number;
@@ -38,7 +41,7 @@ export class Masonry extends React.PureComponent<Props, State> {
   };
 
   public render() {
-    const { gap = DEFAULT_GAP, items, minColumnWidth } = this.props;
+    const { gap = DEFAULT_GAP, items, minColumnWidth, equalHeight } = this.props;
     const { containerWidth } = this.state;
     const margin = gap / 2;
     const count = containerWidth !== undefined ? columnCount(containerWidth, gap, minColumnWidth) : null;
@@ -47,7 +50,17 @@ export class Masonry extends React.PureComponent<Props, State> {
     if (count !== null && items.length > 0) {
       const columns = sort(count, items);
 
-      content = (
+      content = equalHeight ? (
+          <div style={{display: "flex", margin: -margin, flexWrap: "wrap"}}>
+              {columns.map((c) => (
+                  c.map(i => (
+                      <div key={i.key} style={{padding: margin, width: `${100 / columns.length}%`}}>
+                          {i.node}
+                      </div>
+                  ))
+              ))}
+          </div>
+      ) : (
         <div style={{ display: "flex", margin: -margin }}>
           {columns.map((c, i) => (
             <div key={i} style={{ flex: "1 1 auto", width: `${100 / columns.length}%` }}>

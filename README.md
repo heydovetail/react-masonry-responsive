@@ -4,15 +4,21 @@ A lightweight, performant, and responsive masonry layout for React.
 
 ![Demo of react-masonry-responsive](https://raw.githubusercontent.com/heydovetail/react-masonry-responsive/master/img/demo.gif)
 
+## Status
+
+⚠️**Deprecated**
+
+Unfortunately we don’t have time to maintain this library at the moment so we have archived it. We may return to this in the future. In the meantime, the latest working version is still available on NPM.
+
 ## Features
 
-* Satisfies the masonry requirements laid out in [this article](https://regisphilibert.com/blog/2017/12/pure-css-masonry-layout-with-flexbox-grid-columns-in-2018/)
-* Easy-to-use interface – pass items along with desired column width
-* Fully responsive column width and column count based on container size
-* Full-bleed columns – no extra gutter on the left and right
-* Server-side render support for frameworks like [Gatsby](https://www.gatsbyjs.org/)
-* Small library with two dependencies
-* No cheesy baked-in animations
+- Satisfies the masonry requirements laid out in [this article](https://regisphilibert.com/blog/2017/12/pure-css-masonry-layout-with-flexbox-grid-columns-in-2018/)
+- Easy-to-use interface – pass items along with desired column width
+- Fully responsive column width and column count based on container size
+- Full-bleed columns – no extra gutter on the left and right
+- Server-side render support for frameworks like [Gatsby](https://www.gatsbyjs.org/)
+- Small library with two dependencies
+- No cheesy baked-in animations
 
 ## Installation
 
@@ -76,7 +82,7 @@ export interface Props {
   // Optional gap between items, both horizontally and vertically.
   // Defaults to 32px.
   gap?: number;
-  
+
   // Optional. Equalize the height of items on each row.
   equalHeight?: boolean;
 
